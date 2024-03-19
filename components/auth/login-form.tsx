@@ -18,6 +18,7 @@ import FormError from '@/components/common/form-error';
 import FormSuccess from '@/components/common/form-success';
 import { login } from '@/actions/login';
 import { useState, useTransition } from 'react';
+import Loader from '@/components/common/loader';
 
 const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -34,8 +35,8 @@ const LoginForm = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
@@ -88,8 +89,12 @@ const LoginForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type='submit' disabled={isPending} className='w-full'>
-            Login
+          <Button
+            type='submit'
+            disabled={isPending}
+            className='w-full space-x-2'>
+            {isPending && <Loader />}
+            <p>Login</p>
           </Button>
         </form>
       </Form>
